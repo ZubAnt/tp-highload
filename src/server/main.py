@@ -6,6 +6,7 @@ from server import Server
 
 
 def main():
+
     logging.basicConfig(level=logging.DEBUG)
     loop = get_event_loop()
     server = Server(loop=loop)
