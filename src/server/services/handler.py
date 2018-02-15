@@ -19,8 +19,21 @@ class Handler(object):
         addr = writer.get_extra_info('peername')
         print("Received %r from %r" % (message, addr))
 
-        print("Send: %r" % message)
-        writer.write(data)
+        send_msg = b"""HTTP/1.1 200 OK
+        Server: nginx/1.2.1
+        Date: Sat, 08 Mar 2014 22:53:46 GMT
+        Content-Type: application/octet-stream
+        Content-Length: 7
+        Last-Modified: Sat, 08 Mar 2014 22:53:30 GMT
+        Connection: keep-alive
+        Accept-Ranges: bytes  
+              
+
+        Wisdom
+        """
+
+        print("Send: %r" % send_msg)
+        writer.write(send_msg)
         await writer.drain()
 
         print("Close the client socket")
