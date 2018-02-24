@@ -2,7 +2,7 @@ FROM python:slim
 
 COPY ./src /
 
-COPY ./default.cong /
+COPY ./default.conf /
 
 WORKDIR /
 

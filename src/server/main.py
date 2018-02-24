@@ -2,6 +2,7 @@ import logging
 
 from asyncio import get_event_loop
 
+from configs.configure_factory import ConfigureFactory
 from server import Server
 
 
@@ -9,7 +10,8 @@ def main():
 
     logging.basicConfig(level=logging.DEBUG)
     loop = get_event_loop()
-    server = Server(loop=loop)
+    conf = ConfigureFactory.create()
+    server = Server(loop=loop, conf=conf)
     server.start()
 
     try:

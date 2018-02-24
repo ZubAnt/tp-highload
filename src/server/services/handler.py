@@ -1,12 +1,14 @@
 from asyncio import StreamReader, StreamWriter
 
+from configs.configure import Configure
 from configs.connection import Connection
 from configs.env_connection_factory import EnvConnectionFactory
 
 
 class Handler(object):
 
-    def __init__(self):
+    def __init__(self, conf: Configure):
+        self.conf = conf
         self._connection = EnvConnectionFactory.create()
 
     @property
