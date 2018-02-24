@@ -1,13 +1,12 @@
 FROM python:slim
 
-COPY ./src /
+COPY ./tests/static/ /var/www/html/
 
 COPY ./src/server/default.conf /
 
+COPY ./src /
+
 WORKDIR /
-
-RUN mkdir -p /var/www/html
-
 
 EXPOSE 80
 EXPOSE 8080
