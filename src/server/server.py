@@ -13,7 +13,7 @@ class Server(object):
         self._handler = Handler(conf)
 
     def start(self):
-        logging.info('add start_server coro')
+        logging.info(f'Starting server on {self._conf.host}:{self._conf.port}')
         self._loop.create_task(start_server(client_connected_cb=self._handler.handle,
                                             host=self._conf.host,
                                             port=self._conf.port,

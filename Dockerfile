@@ -2,7 +2,7 @@ FROM python:slim
 
 COPY ./src /
 
-COPY ./default.conf /
+COPY ./src/server/default.conf /
 
 WORKDIR /
 
@@ -10,6 +10,6 @@ RUN mkdir -p /var/www/html
 
 
 EXPOSE 80
-EXPOSE 5000
+EXPOSE 8080
 
 CMD [ "python", "./server/main.py" ]
