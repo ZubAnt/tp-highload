@@ -11,9 +11,9 @@ class EnvConnectionFactory(object):
         port = os.environ.get('ACCEPT_PORT', None)
 
         if not host:
-            host = 'localhost'
+            host = '0.0.0.0'
 
         if not port:
-            port = 8080
+            port = 5000
 
         return Connection(host=host, port=port)
