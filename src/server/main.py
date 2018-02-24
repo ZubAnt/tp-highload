@@ -16,7 +16,6 @@ def main():
         loop.run_forever()
     except KeyboardInterrupt:
         logging.info("Receive STOP signal")
-        server.stop()
     except BaseException:
         logging.exception("Unhandled exception occurred - service stopped")
 
