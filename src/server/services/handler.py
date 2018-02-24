@@ -4,12 +4,11 @@ from configs.configure import Configure
 
 
 class Handler(object):
-
     def __init__(self, conf: Configure):
         self.conf = conf
 
     async def handle(self, reader: StreamReader, writer: StreamWriter) -> None:
-        data = await reader.read(100)
+        data = await reader.read()
         message = data.decode()
         addr = writer.get_extra_info('peername')
         print("Received %r from %r" % (message, addr))
