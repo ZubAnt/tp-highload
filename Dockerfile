@@ -2,6 +2,8 @@ FROM python:slim
 
 COPY ./src /
 
+COPY ./default.cong /
+
 WORKDIR /
 
 RUN mkdir -p /var/www/html
