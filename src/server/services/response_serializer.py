@@ -7,7 +7,7 @@ class ResponseSerializer(object):
     @staticmethod
     def dump(response: Response) -> bytes:
         if response.status_code == StatusCodes.OK:
-            return ResponseSerializer._success_response(response).encode()
+            return ResponseSerializer._success_response(response).encode() + response.body
         else:
             return ResponseSerializer._error_response(response).encode()
 
@@ -17,8 +17,7 @@ class ResponseSerializer(object):
                f"Content-Type: {response.content_type}\r\n" \
                f"Content-Length: {response.content_length}\r\n" \
                f"Date: {response.date.strftime('%a, %d %b %Y %H:%M:%S GMT')}\r\n" \
-               f"Server: Server\r\n\r\n" \
-               f"{response.body}"
+               f"Server: Server\r\n\r\n"
 
     @staticmethod
     def _error_response(response: Response) -> str:
