@@ -88,50 +88,50 @@ class HttpServer(unittest.TestCase):
     data = r.read()
     self.assertEqual(int(r.status), 404)
 
-  # def test_file_with_query_string(self):
-  #   """query string after filename"""
-  #   self.conn.request("GET", "/httptest/dir2/page.html?arg1=value&arg2=value")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   length = r.getheader("Content-Length")
-  #   self.assertEqual(int(r.status), 200)
-  #   self.assertEqual(int(length), 38)
-  #   self.assertEqual(len(data), 38)
-  #   self.assertEqual(data, "<html><body>Page Sample</body></html>\n")
-  #
-  # def test_file_with_spaces(self):
-  #   """filename with spaces"""
-  #   self.conn.request("GET", "/httptest/space%20in%20name.txt")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   length = r.getheader("Content-Length")
-  #   self.assertEqual(int(r.status), 200)
-  #   self.assertEqual(int(length), 19)
-  #   self.assertEqual(len(data), 19)
-  #   self.assertEqual(data, "letters and spaces\n")
-  #
-  # def test_file_urlencoded(self):
-  #   """urlencoded filename"""
-  #   self.conn.request("GET", "/httptest/dir2/%70%61%67%65%2e%68%74%6d%6c")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   length = r.getheader("Content-Length")
-  #   self.assertEqual(int(r.status), 200)
-  #   self.assertEqual(int(length), 38)
-  #   self.assertEqual(len(data), 38)
-  #   self.assertEqual(data, "<html><body>Page Sample</body></html>\n")
-  #
-  # def test_large_file(self):
-  #   """large file downloaded correctly"""
-  #   self.conn.request("GET", "/httptest/wikipedia_russia.html")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   length = r.getheader("Content-Length")
-  #   self.assertEqual(int(r.status), 200)
-  #   self.assertEqual(int(length), 954824)
-  #   self.assertEqual(len(data), 954824)
-  #   self.assertIn("Wikimedia Foundation, Inc.", data)
-  #
+  def test_file_with_query_string(self):
+    """query string after filename"""
+    self.conn.request("GET", "/httptest/dir2/page.html?arg1=value&arg2=value")
+    r = self.conn.getresponse()
+    data = r.read()
+    length = r.getheader("Content-Length")
+    self.assertEqual(int(r.status), 200)
+    self.assertEqual(int(length), 38)
+    self.assertEqual(len(data), 38)
+    self.assertEqual(data, "<html><body>Page Sample</body></html>\n")
+
+  def test_file_with_spaces(self):
+    """filename with spaces"""
+    self.conn.request("GET", "/httptest/space%20in%20name.txt")
+    r = self.conn.getresponse()
+    data = r.read()
+    length = r.getheader("Content-Length")
+    self.assertEqual(int(r.status), 200)
+    self.assertEqual(int(length), 19)
+    self.assertEqual(len(data), 19)
+    self.assertEqual(data, "letters and spaces\n")
+
+  def test_file_urlencoded(self):
+    """urlencoded filename"""
+    self.conn.request("GET", "/httptest/dir2/%70%61%67%65%2e%68%74%6d%6c")
+    r = self.conn.getresponse()
+    data = r.read()
+    length = r.getheader("Content-Length")
+    self.assertEqual(int(r.status), 200)
+    self.assertEqual(int(length), 38)
+    self.assertEqual(len(data), 38)
+    self.assertEqual(data, "<html><body>Page Sample</body></html>\n")
+
+  def test_large_file(self):
+    """large file downloaded correctly"""
+    self.conn.request("GET", "/httptest/wikipedia_russia.html")
+    r = self.conn.getresponse()
+    data = r.read()
+    length = r.getheader("Content-Length")
+    self.assertEqual(int(r.status), 200)
+    self.assertEqual(int(length), 954824)
+    self.assertEqual(len(data), 954824)
+    self.assertIn("Wikimedia Foundation, Inc.", data)
+
   # def test_document_root_escaping(self):
   #   """document root escaping forbidden"""
   #   self.conn.request("GET", "/httptest/../../../../../../../../../../../../../etc/passwd")
