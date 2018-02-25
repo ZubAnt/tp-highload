@@ -56,13 +56,13 @@ class HttpServer(unittest.TestCase):
     self.assertEqual(len(data), 34)
     self.assertEqual(data, "<html>Directory index file</html>\n")
 
-  # def test_index_not_found(self):
-  #   """directory index file absent"""
-  #   self.conn.request("GET", "/httptest/dir1/")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   self.assertEqual(int(r.status), 403)
-  #
+  def test_index_not_found(self):
+    """directory index file absent"""
+    self.conn.request("GET", "/httptest/dir1/")
+    r = self.conn.getresponse()
+    data = r.read()
+    self.assertEqual(int(r.status), 403)
+
   # def test_file_not_found(self):
   #   """absent file returns 404"""
   #   self.conn.request("GET", "/httptest/smdklcdsmvdfjnvdfjvdfvdfvdsfssdmfdsdfsd.html")

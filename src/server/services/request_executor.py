@@ -37,7 +37,11 @@ class RequestExecutor(object):
         try:
             body = await self._reader.read(filename)
         except FileNotFoundError:
-            return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
+            if request.url[-1:] == '/':
+                return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
+            else:
+                return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
+
 
         try:
             content_type = ContentTypes[file_url.split('.')[-1]].value
