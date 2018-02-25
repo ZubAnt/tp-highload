@@ -4,35 +4,40 @@ from models.status_codes import StatusCodes
 
 
 class Response:
-    def __init__(self, code: StatusCodes, protocol: str, content_type: str = None,
+
+    def __init__(self,
+                 status_code: StatusCodes,
+                 protocol: str,
+                 content_type: str = None,
                  content_length: int = 0,
-                 data = b''):
-        self._status_code = code
+                 body: bytes = b''):
+        self._status_code = status_code
         self._protocol = protocol
-        self._data = data
         self._content_type = content_type
         self._content_length = content_length
-        self._date = datetime.utcnow().strftime('%a, %d %b %Y %H:%M:%S GMT')
+        self._body = body
+        self._date = datetime.utcnow()
 
-    def _success(self):
-        return 'HTTP/{} {}\r\n' \
-               'Content-Type: {}\r\n' \
-               'Content-Length: {}\r\n'\
-               'Date: {}\r\n' \
-               'Server: Server\r\n\r\n'.format(self._protocol,
-                                               self._status_code.value,
-                                               self._content_type,
-                                               self._content_length,
-                                               self._date)
+    @property
+    def status_code(self) -> StatusCodes:
+        return self._status_code
 
-    def _error(self):
-        return 'HTTP/{} {}\r\n' \
-               'Server: Server'.format(self._protocol, self._status_code.value)
+    @property
+    def protocol(self) -> str:
+        return self._protocol
 
-    def dump(self):
-        if self._status_code == StatusCodes.OK:
-            return self._success().encode() + self._data
-        if self._status_code == StatusCodes.NOT_FOUND \
-                or self._status_code == StatusCodes.NOT_ALLOWED \
-                or self._status_code == StatusCodes.FORBIDDEN:
-            return self._error().encode()
+    @bytes
+    def body(self) -> bytes:
+        return self._body
+
+    @property
+    def content_type(self) -> str:
+        return self._content_type
+
+    @property
+    def content_length(self) -> int:
+        return self._content_length
+
+    @property
+    def date(self) -> datetime:
+        return self._date
