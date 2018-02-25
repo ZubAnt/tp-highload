@@ -36,6 +36,8 @@ class RequestExecutor(object):
 
         try:
             body = await self._reader.read(filename)
+            # print(f"[RequestExecutor.execute] body: {body}")
+            # print(f"[RequestExecutor.execute] end")
         except FileNotFoundError:
             if request.url[-1:] == '/':
                 return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)

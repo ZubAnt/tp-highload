@@ -1,4 +1,4 @@
-from asyncio import AbstractEventLoop
+from asyncio import AbstractEventLoop, sleep
 from concurrent.futures import ThreadPoolExecutor
 
 from configs.configure import Configure
@@ -13,10 +13,14 @@ class FileReader(object):
 
     async def read(self, filename: str) -> str:
         data: str = ""
-        with open(filename) as file:
+        file = open(filename)
+        while True:
             chunk = await self._loop.run_in_executor(self._executor, file.read, self._conf.read_chunk_size)
-            print(f"[FileReader.read] chunk: {chunk}")
-            if not chunk:
-                return data
+            await sleep(0)
+            # print(f"[FileReader.read] chunk: {chunk}")
+            # print()
+            if chunk == '':
+                break
             data += chunk
+        print(f"[FileReader.read] type of data: {type(data)}")
         return data
