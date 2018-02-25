@@ -11,7 +11,7 @@ def main():
 
     logging.basicConfig(level=logging.DEBUG)
     loop = get_event_loop()
-    conf = SrcConfigureFactory.create()
+    conf = FileConfigureFactory.create()
     server = Server(loop=loop, conf=conf)
     server.start()
 

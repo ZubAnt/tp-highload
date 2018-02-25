@@ -33,7 +33,11 @@ class RequestExecutor(object):
             return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
 
         filename = os.path.join(self._conf.document_root, file_url)
-        body = await self._reader.read(filename)
+
+        try:
+            body = await self._reader.read(filename)
+        except FileNotFoundError:
+            return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
 
         try:
             content_type = ContentTypes[file_url.split('.')[-1]].value
