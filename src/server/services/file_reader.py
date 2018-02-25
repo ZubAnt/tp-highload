@@ -15,6 +15,8 @@ class FileReader(object):
         data: str = ""
         with open(filename) as file:
             chunk = await self._loop.run_in_executor(self._executor, file.read, self._conf.read_chunk_size)
+            print(f"[FileReader.read] chunk: {chunk}")
             if not chunk:
                 return data
             data += chunk
+        return data

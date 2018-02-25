@@ -3,6 +3,7 @@ from asyncio import StreamReader, StreamWriter, sleep, IncompleteReadError, Abst
 from configs.configure import Configure
 from services.request_executor import RequestExecutor
 from services.request_parser import RequestParser
+from services.response_serializer import ResponseSerializer
 
 
 class Handler(object):
@@ -40,7 +41,8 @@ class Handler(object):
         print("Received %r from %r" % (data, addr))
 
         request = self._parser.parse(data)
-        await self._executor.execute(request)
+        response = await self._executor.execute(request)
+        data = ResponseSerializer.dump(response)
 
 
         send_msg = b"""HTTP/1.1 200 OK
@@ -57,7 +59,7 @@ class Handler(object):
         """
 
         print("Send: %r" % send_msg)
-        writer.write(send_msg)
+        writer.write(data)
         await writer.drain()
 
         print("Close the client socket")

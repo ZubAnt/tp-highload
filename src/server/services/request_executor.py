@@ -5,6 +5,7 @@ from asyncio import AbstractEventLoop
 from typing import Optional
 
 from configs.configure import Configure
+from models.content_types import ContentTypes
 from models.request import Request
 from models.response import Response
 from models.status_codes import StatusCodes
@@ -32,9 +33,20 @@ class RequestExecutor(object):
             return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
 
         filename = os.path.join(self._conf.document_root, file_url)
-        data = await self._reader.read(filename)
-        print(data)
-        return None
+        body = await self._reader.read(filename)
+
+        try:
+            content_type = ContentTypes[file_url.split('.')[-1]].value
+        except KeyError:
+            content_type = ContentTypes.text_plain
+
+        content_length = len(body)
+
+        return Response(status_code=StatusCodes.OK,
+                        protocol=request.protocol,
+                        content_type=content_type,
+                        content_length=content_length,
+                        body=body)
 
 
 

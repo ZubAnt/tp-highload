@@ -3,12 +3,13 @@ from enum import Enum
 
 class ContentTypes(Enum):
 
-    html = 'text/html'
-    css = 'text/css'
-    js = 'text/javascript'
-    jpg = 'image/jpeg'
-    jpeg = 'image/jpeg'
-    png = 'image/png'
+    text_html = 'text/html'
+    text_css = 'text/css'
+    text_js = 'text/javascript'
+    text_txt = 'text/txt'
+    text_plain = 'text/plain'
+    image_jpg = 'image/jpeg'
+    image_jpeg = 'image/jpeg'
+    image_png = 'image/png'
+    image_gif = 'image/gif'
     swf = 'application/x-shockwave-flash'
-    gif = 'image/gif'
-    txt = 'text/txt'

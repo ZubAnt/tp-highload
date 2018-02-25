@@ -10,7 +10,7 @@ class Response:
                  protocol: str,
                  content_type: str = None,
                  content_length: int = 0,
-                 body: bytes = b''):
+                 body: str = None):
         self._status_code = status_code
         self._protocol = protocol
         self._content_type = content_type
@@ -27,7 +27,7 @@ class Response:
         return self._protocol
 
     @property
-    def body(self) -> bytes:
+    def body(self) -> str:
         return self._body
 
     @property
