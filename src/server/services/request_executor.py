@@ -41,6 +41,8 @@ class RequestExecutor(object):
                 return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
             else:
                 return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
+        except NotADirectoryError:
+            return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
 
 
         try:

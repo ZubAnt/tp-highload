@@ -63,31 +63,31 @@ class HttpServer(unittest.TestCase):
     data = r.read()
     self.assertEqual(int(r.status), 403)
 
-  # def test_file_not_found(self):
-  #   """absent file returns 404"""
-  #   self.conn.request("GET", "/httptest/smdklcdsmvdfjnvdfjvdfvdfvdsfssdmfdsdfsd.html")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   self.assertEqual(int(r.status), 404)
-  #
-  # def test_file_in_nested_folders(self):
-  #   """file located in nested folders"""
-  #   self.conn.request("GET", "/httptest/dir1/dir12/dir123/deep.txt")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   length = r.getheader("Content-Length")
-  #   self.assertEqual(int(r.status), 200)
-  #   self.assertEqual(int(length), 20)
-  #   self.assertEqual(len(data), 20)
-  #   self.assertEqual(data, "bingo, you found it\n")
-  #
-  # def test_file_with_query_string(self):
-  #   """slash after filename"""
-  #   self.conn.request("GET", "/httptest/dir2/page.html/")
-  #   r = self.conn.getresponse()
-  #   data = r.read()
-  #   self.assertEqual(int(r.status), 404)
-  #
+  def test_file_not_found(self):
+    """absent file returns 404"""
+    self.conn.request("GET", "/httptest/smdklcdsmvdfjnvdfjvdfvdfvdsfssdmfdsdfsd.html")
+    r = self.conn.getresponse()
+    data = r.read()
+    self.assertEqual(int(r.status), 404)
+
+  def test_file_in_nested_folders(self):
+    """file located in nested folders"""
+    self.conn.request("GET", "/httptest/dir1/dir12/dir123/deep.txt")
+    r = self.conn.getresponse()
+    data = r.read()
+    length = r.getheader("Content-Length")
+    self.assertEqual(int(r.status), 200)
+    self.assertEqual(int(length), 20)
+    self.assertEqual(len(data), 20)
+    self.assertEqual(data, "bingo, you found it\n")
+
+  def test_file_with_query_string(self):
+    """slash after filename"""
+    self.conn.request("GET", "/httptest/dir2/page.html/")
+    r = self.conn.getresponse()
+    data = r.read()
+    self.assertEqual(int(r.status), 404)
+
   # def test_file_with_query_string(self):
   #   """query string after filename"""
   #   self.conn.request("GET", "/httptest/dir2/page.html?arg1=value&arg2=value")
