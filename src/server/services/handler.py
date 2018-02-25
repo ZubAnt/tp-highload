@@ -1,15 +1,15 @@
-from asyncio import StreamReader, StreamWriter, sleep, IncompleteReadError
+from asyncio import StreamReader, StreamWriter, sleep, IncompleteReadError, AbstractEventLoop
 
 from configs.configure import Configure
+from services.request_executor import RequestExecutor
 from services.request_parser import RequestParser
-
-from socket import socket
 
 
 class Handler(object):
-    def __init__(self, conf: Configure):
+    def __init__(self, conf: Configure, loop: AbstractEventLoop):
         self._conf = conf
         self._parser = RequestParser()
+        self._executor = RequestExecutor(conf, loop)
 
     async def handle(self, reader: StreamReader, writer: StreamWriter) -> None:
 
@@ -40,11 +40,8 @@ class Handler(object):
         print("Received %r from %r" % (data, addr))
 
         request = self._parser.parse(data)
+        await self._executor.execute(request)
 
-        if request.method not in ('GET', 'HEAD'):
-            pass
-
-               
 
         send_msg = b"""HTTP/1.1 200 OK
         Server: nginx/1.2.1

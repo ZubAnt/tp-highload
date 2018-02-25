@@ -4,7 +4,7 @@ from pathlib import Path
 from configs.configure import Configure
 
 
-class ConfigureFactory(object):
+class FileConfigureFactory(object):
 
     @staticmethod
     def create() -> Configure:

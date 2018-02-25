@@ -52,6 +52,8 @@ class RequestParser(object):
             return params
         except ValueError:
             return None
+        except IndexError:
+            return None
 
     @classmethod
     def _parse_headers(cls, data: str) -> Optional[Dict[str, Any]]:

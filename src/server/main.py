@@ -2,7 +2,8 @@ import logging
 
 from asyncio import get_event_loop
 
-from configs.configure_factory import ConfigureFactory
+from configs.file_configure_factory import FileConfigureFactory
+from configs.src_configure_factory import SrcConfigureFactory
 from server import Server
 
 
@@ -10,7 +11,7 @@ def main():
 
     logging.basicConfig(level=logging.DEBUG)
     loop = get_event_loop()
-    conf = ConfigureFactory.create()
+    conf = SrcConfigureFactory.create()
     server = Server(loop=loop, conf=conf)
     server.start()
 

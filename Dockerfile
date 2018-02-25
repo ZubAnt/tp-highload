@@ -2,7 +2,7 @@ FROM python:slim
 
 COPY ./tests/static/ /var/www/html/
 
-COPY ./src/server/default.conf /
+COPY ./default.conf /
 
 COPY ./src /
 

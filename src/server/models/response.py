@@ -26,7 +26,7 @@ class Response:
     def protocol(self) -> str:
         return self._protocol
 
-    @bytes
+    @property
     def body(self) -> bytes:
         return self._body
 
