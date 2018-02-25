@@ -3,12 +3,12 @@ from typing import Dict, Any
 
 class Request(object):
 
-    def __init__(self, method: str, protocol: str, url: str, headers: Dict[str, Any], query: str) -> None:
+    def __init__(self, method: str, protocol: str, url: str, headers: Dict[str, Any], params: Dict[str, Any]) -> None:
         self._method = method
         self._protocol = protocol
         self._url = url
         self._headers = headers
-        self._query = query
+        self._params = params
 
     @property
     def method(self) -> str:
@@ -27,5 +27,5 @@ class Request(object):
         return self._headers
 
     @property
-    def query(self) -> str:
-        return self._query
+    def params(self) -> Dict[str, Any]:
+        return self._params

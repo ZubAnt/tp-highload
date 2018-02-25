@@ -3,6 +3,8 @@ from asyncio import StreamReader, StreamWriter, sleep, IncompleteReadError
 from configs.configure import Configure
 from services.request_parser import RequestParser
 
+from socket import socket
+
 
 class Handler(object):
     def __init__(self, conf: Configure):
@@ -17,12 +19,12 @@ class Handler(object):
             print(f"try read {i} block...")
 
             block = await reader.read(self._conf.read_chunk_size)
-            print(f"block[{i}] = {block}")
-            print(f"total: {self._conf.read_chunk_size} bytes; actual: {len(block)} bytes")
-            print(f"reader.at_eof() = {reader.at_eof()}")
-            print(f"reader buffer: {reader._buffer}")
-            print(f"reader eof: {reader._eof}")
-            print()
+            # print(f"block[{i}] = {block}")
+            # print(f"total: {self._conf.read_chunk_size} bytes; actual: {len(block)} bytes")
+            # print(f"reader.at_eof() = {reader.at_eof()}")
+            # print(f"reader buffer: {reader._buffer}")
+            # print(f"reader eof: {reader._eof}")
+            # print()
 
             blocks.append(block)
             i += 1
@@ -30,10 +32,12 @@ class Handler(object):
             if not block or reader.at_eof():
                 break
 
+            if reader._buffer == b'':
+                break
 
         data: str = b''.join(blocks).decode()
 
-        self._parser.parse(data)
+        request = self._parser.parse(data)
         addr = writer.get_extra_info('peername')
         print("Received %r from %r" % (data, addr))
 
