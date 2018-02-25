@@ -21,7 +21,7 @@ class RequestExecutor(object):
 
     async def execute(self, request: Request) -> Optional[Response]:
         if request.method not in ('GET', 'HEAD'):
-            pass
+            return Response(status_code=StatusCodes.NOT_ALLOWED, protocol=request.protocol)
 
         # get last el or empty string
         if request.url[-1:] == '/':
