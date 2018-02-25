@@ -1,17 +1,20 @@
 from asyncio import StreamReader, StreamWriter
 
 from configs.configure import Configure
+from services.request_parser import RequestParser
 
 
 class Handler(object):
     def __init__(self, conf: Configure):
-        self.conf = conf
+        self._conf = conf
+        self._parser = RequestParser()
 
     async def handle(self, reader: StreamReader, writer: StreamWriter) -> None:
         data = await reader.read()
-        message = data.decode()
+        msg = data.decode()
+        # self._parser.parse(msg)
         addr = writer.get_extra_info('peername')
-        print("Received %r from %r" % (message, addr))
+        print("Received %r from %r" % (msg, addr))
 
         send_msg = b"""HTTP/1.1 200 OK
         Server: nginx/1.2.1
