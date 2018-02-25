@@ -36,10 +36,15 @@ class Handler(object):
                 break
 
         data: str = b''.join(blocks).decode()
-
-        request = self._parser.parse(data)
         addr = writer.get_extra_info('peername')
         print("Received %r from %r" % (data, addr))
+
+        request = self._parser.parse(data)
+
+        if request.method not in ('GET', 'HEAD'):
+            pass
+
+               
 
         send_msg = b"""HTTP/1.1 200 OK
         Server: nginx/1.2.1
