@@ -1,4 +1,4 @@
-from asyncio import StreamReader, StreamWriter
+from asyncio import StreamReader, StreamWriter, sleep, IncompleteReadError
 
 from configs.configure import Configure
 from services.request_parser import RequestParser
@@ -10,11 +10,32 @@ class Handler(object):
         self._parser = RequestParser()
 
     async def handle(self, reader: StreamReader, writer: StreamWriter) -> None:
-        data = await reader.read()
-        msg = data.decode()
-        # self._parser.parse(msg)
+
+        blocks = []
+        i = 0
+        while True:
+            print(f"try read {i} block...")
+
+            block = await reader.read(self._conf.read_chunk_size)
+            print(f"block[{i}] = {block}")
+            print(f"total: {self._conf.read_chunk_size} bytes; actual: {len(block)} bytes")
+            print(f"reader.at_eof() = {reader.at_eof()}")
+            print(f"reader buffer: {reader._buffer}")
+            print(f"reader eof: {reader._eof}")
+            print()
+
+            blocks.append(block)
+            i += 1
+
+            if not block or reader.at_eof():
+                break
+
+
+        data: str = b''.join(blocks).decode()
+
+        self._parser.parse(data)
         addr = writer.get_extra_info('peername')
-        print("Received %r from %r" % (msg, addr))
+        print("Received %r from %r" % (data, addr))
 
         send_msg = b"""HTTP/1.1 200 OK
         Server: nginx/1.2.1

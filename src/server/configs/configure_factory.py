@@ -1,7 +1,6 @@
 import configparser
 from pathlib import Path
 
-
 from configs.configure import Configure
 
 
@@ -22,8 +21,5 @@ class ConfigureFactory(object):
         read_chunk_size = int(config.get('server-config', 'read_chunk_size'))
         write_chunk_size = int(config.get('server-config', 'write_chunk_size'))
 
-        return Configure(port=port, document_root=document_root,
-                         file_block_size=file_block_size,
-                         cpu_count=cpu_count,
-                         read_chunk_size=read_chunk_size,
-                         write_chunk_size=write_chunk_size)
+        return Configure(port=port, document_root=document_root, file_block_size=file_block_size,
+                         cpu_count=cpu_count, read_chunk_size=read_chunk_size, write_chunk_size=write_chunk_size)
