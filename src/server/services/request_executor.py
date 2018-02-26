@@ -34,6 +34,10 @@ class RequestExecutor(object):
 
         filename = os.path.join(self._conf.document_root, file_url)
 
+        if request.method == 'HEAD':
+            # os.get_si
+            return Response(status_code=StatusCodes.OK, protocol=request.protocol)
+
         try:
             body = await self._reader.read(filename)
             print(f"[RequestExecutor.execute] body: {body}")
@@ -45,7 +49,6 @@ class RequestExecutor(object):
                 return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
         except NotADirectoryError:
             return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
-
 
         try:
             content_type = ContentTypes[file_url.split('.')[-1]].value

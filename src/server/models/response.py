@@ -10,7 +10,7 @@ class Response:
                  protocol: str,
                  content_type: str = None,
                  content_length: int = 0,
-                 body: bytes = None):
+                 body: bytes = b''):
         self._status_code = status_code
         self._protocol = protocol
         self._content_type = content_type
