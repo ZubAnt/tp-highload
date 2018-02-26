@@ -95,9 +95,9 @@ class RequestExecutor(object):
             raise NotFoundError
 
         try:
-            content_type = ContentTypes[file_url.split('.')[-1]].value
+            content_type = ContentTypes[file_url.split('.')[-1]]
         except KeyError:
-            content_type = ContentTypes.text_plain
+            content_type = ContentTypes.plain
 
         return Resource(filename=filename, file_url=file_url,
                         content_type=content_type, size=size)
