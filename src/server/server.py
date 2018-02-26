@@ -1,19 +1,20 @@
+import logging
 from asyncio import AbstractEventLoop, start_server
 
-from injector import singleton
-
+from configs.configure import Configure
 from services.handler import Handler
 
 
-@singleton
 class Server(object):
 
-    def __init__(self, loop: AbstractEventLoop):
+    def __init__(self, loop: AbstractEventLoop, conf: Configure) -> None:
         self._loop = loop
-        self._handler = Handler()
+        self._conf = conf
+        self._handler = Handler(conf, loop)
 
     def start(self):
+        logging.info(f'Starting server on {self._conf.host}:{self._conf.port}')
         self._loop.create_task(start_server(client_connected_cb=self._handler.handle,
-                                            host=self._handler.connection.host,
-                                            port=self._handler.connection.port,
+                                            host=self._conf.host,
+                                            port=self._conf.port,
                                             loop=self._loop))
