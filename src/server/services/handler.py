@@ -7,6 +7,7 @@ from services.response_serializer import ResponseSerializer
 
 
 class Handler(object):
+
     def __init__(self, conf: Configure, loop: AbstractEventLoop):
         self._conf = conf
         self._parser = RequestParser()
@@ -14,18 +15,17 @@ class Handler(object):
 
     async def handle(self, reader: StreamReader, writer: StreamWriter) -> None:
 
-        blocks = []
+        data = b''
         while True:
-            block = await reader.read(self._conf.read_chunk_size)
-            blocks.append(block)
+            chunk = await reader.read(self._conf.read_chunk_size)
+            data += chunk
 
-            if not block or reader.at_eof() or reader._buffer == b'':
+            if not chunk or reader.at_eof() or b'\r\n\r\n' in data:
                 break
 
             await sleep(0)
 
-        data: str = b''.join(blocks).decode()
-        request = self._parser.parse(data)
+        request = self._parser.parse(data.decode())
         response = await self._executor.execute(request)
         data = ResponseSerializer.dump(response)
 
