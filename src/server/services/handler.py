@@ -1,4 +1,4 @@
-from asyncio import StreamReader, StreamWriter, sleep, IncompleteReadError, AbstractEventLoop
+from asyncio import StreamReader, StreamWriter, sleep, AbstractEventLoop
 
 from configs.configure import Configure
 from services.request_executor import RequestExecutor
@@ -15,38 +15,21 @@ class Handler(object):
     async def handle(self, reader: StreamReader, writer: StreamWriter) -> None:
 
         blocks = []
-        i = 0
         while True:
-            print(f"try read {i} block...")
-
             block = await reader.read(self._conf.read_chunk_size)
-            # print(f"block[{i}] = {block}")
-            # print(f"total: {self._conf.read_chunk_size} bytes; actual: {len(block)} bytes")
-            # print(f"reader.at_eof() = {reader.at_eof()}")
-            # print(f"reader buffer: {reader._buffer}")
-            # print(f"reader eof: {reader._eof}")
-            # print()
-
             blocks.append(block)
-            i += 1
 
-            if not block or reader.at_eof():
+            if not block or reader.at_eof() or reader._buffer == b'':
                 break
 
-            if reader._buffer == b'':
-                break
+            await sleep(0)
 
         data: str = b''.join(blocks).decode()
-        addr = writer.get_extra_info('peername')
-        print("Received %r from %r" % (data, addr))
-
         request = self._parser.parse(data)
         response = await self._executor.execute(request)
         data = ResponseSerializer.dump(response)
 
-        print("Send: %r" % data)
         writer.write(data)
         await writer.drain()
 
-        print("Close the client socket")
         writer.close()

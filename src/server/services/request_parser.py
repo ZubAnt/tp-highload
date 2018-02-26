@@ -12,11 +12,6 @@ class RequestParser(object):
         url = self._parse_url(data)
         params = self._parse_params(data)
         headers = self._parse_headers(data)
-        print(f"method: {method}")
-        print(f"protocol: {protocol}")
-        print(f"url: {url}")
-        print(f"params: {params}")
-        print(f"headers: {headers}")
         return Request(method=method, protocol=protocol, url=url, params=params, headers=headers)
 
     @classmethod
@@ -33,11 +28,7 @@ class RequestParser(object):
     @classmethod
     def _parse_url(cls, data: str) -> Optional[str]:
         try:
-            print(f"[_parse_url] {(data.split(' ')[1])}")
             url = parse.unquote((data.split(' ')[1].split('?')[0]))
-            # print(f"[_parse_url] url: {url}")
-            # if len(url) == 0:
-            #     url += '/'
             return url
         except BaseException:
             return None
