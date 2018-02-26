@@ -11,4 +11,6 @@ WORKDIR /
 EXPOSE 80
 EXPOSE 8080
 
+USER root
+
 CMD [ "python", "./server/main.py" ]
