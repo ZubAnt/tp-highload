@@ -20,7 +20,12 @@ class Handler(object):
             chunk = await reader.read(self._conf.read_chunk_size)
             data += chunk
 
-            if not chunk or reader.at_eof() or b'\r\n\r\n' in data:
+            if not chunk or reader.at_eof():
+                break
+
+            lines = data.split(b'\n')
+
+            if lines[-1] == b'':
                 break
 
             await sleep(0)
