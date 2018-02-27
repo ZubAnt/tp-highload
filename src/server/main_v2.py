@@ -16,7 +16,7 @@ forks = []
 
 if __name__ == "__main__":
 
-    conf = SrcConfigureFactory.create()
+    conf = FileConfigureFactory.create()
 
     # logging.basicConfig(level=logging.DEBUG)
     logging.basicConfig(level=logging.INFO)
@@ -34,11 +34,9 @@ if __name__ == "__main__":
         forks.append(pid)
         if pid == 0:
             loop = get_event_loop()
-            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=conf.workers, pid=os.getpid())
+            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=1, pid=os.getpid())
             manager.spawn()
             loop.close()
-
-    # loop.run_forever()
 
     for pid in forks:
         os.waitpid(pid, 0)

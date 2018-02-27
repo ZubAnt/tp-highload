@@ -15,7 +15,7 @@ def main():
     conf = SrcConfigureFactory.create()
 
     loop = get_event_loop()
-    manager = ServerManager(loop, conf, workers=100)
+    manager = ServerManager(loop, conf, workers=10)
     manager.spawn()
 
     try:
