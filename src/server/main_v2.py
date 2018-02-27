@@ -18,8 +18,8 @@ if __name__ == "__main__":
 
     conf = SrcConfigureFactory.create()
 
-    logging.basicConfig(level=logging.DEBUG)
-    # logging.basicConfig(level=logging.INFO)
+    # logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     sock = socket(AF_INET, SOCK_STREAM)
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         forks.append(pid)
         if pid == 0:
             loop = get_event_loop()
-            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=4, pid=os.getpid())
+            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=conf.workers, pid=os.getpid())
             manager.spawn()
             loop.close()
 

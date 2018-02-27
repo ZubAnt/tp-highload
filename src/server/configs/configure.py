@@ -5,7 +5,8 @@ class Configure(object):
                  file_block_size: int,
                  cpu_count: int,
                  read_chunk_size: int,
-                 write_chunk_size: int) -> None:
+                 write_chunk_size: int,
+                 workers: int = None) -> None:
         self._host: str = '0.0.0.0'
         self._port = port
         self._document_root = document_root
@@ -13,6 +14,7 @@ class Configure(object):
         self._cpu_count = cpu_count
         self._read_chunk_size = read_chunk_size
         self._write_chunk_size = write_chunk_size
+        self._workers = 1 if workers is None else workers
 
     @property
     def host(self) -> str:
@@ -41,3 +43,7 @@ class Configure(object):
     @property
     def write_chunk_size(self) -> int:
         return self._write_chunk_size
+
+    @property
+    def workers(self) -> int:
+        return self._workers

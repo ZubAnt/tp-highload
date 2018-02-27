@@ -1,6 +1,6 @@
 import logging
 import socket
-from asyncio import AbstractEventLoop, gather
+from asyncio import AbstractEventLoop, gather, ensure_future
 
 from configs.configure import Configure
 from services.worker import Worker
@@ -25,23 +25,21 @@ class WorkerManager(object):
         logging.info(f"[WorkerManager] [pid: {self._pid}] listen on {self._conf.host}:{self._conf.port}; "
                      f"spawning {self._workers} workers...")
 
-        # for idx in range(self._workers):
-        #     self._loop.run_until_complete(self._worker.start(idx))
-        #     self._loop.close()
-
+        self._loop.run_until_complete(self._worker.start(0))
+        self._loop.close()
 
         #############################################################################
 
-
-        collection = list()
-        for idx in range(self._workers):
-            collection += [self._worker.start(idx)]
-            logging.debug(f"[WorkerManager] spawn {idx} worker")
-            self._loop.create_task(self._worker.start(idx))
-        logging.debug(f"[WorkerManager] collection of workers: {collection}")
-        feature = gather(*tuple(collection))
-        self._loop.run_until_complete(feature)
-        self._loop.close()
+        # tasks = list()
+        # for idx in range(self._workers):
+        #     task = ensure_future(self._worker.start(idx))
+        #     tasks += [task]
+        #     logging.debug(f"[WorkerManager] spawn {idx} worker")
+        #     # self._loop.create_task(self._worker.start(idx))
+        # logging.debug(f"[WorkerManager] collection of workers: {tasks}")
+        # feature = gather(*tasks)
+        # self._loop.run_until_complete(feature)
+        # self._loop.close()
 
     def stop(self):
         self._worker.stop()
