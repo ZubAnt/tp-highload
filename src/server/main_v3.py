@@ -19,23 +19,26 @@ if __name__ == "__main__":
 
     conf = SrcConfigureFactory.create()
 
-    sock = socket(AF_INET, SOCK_STREAM)
-    sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-    sock.bind((conf.host, conf.port))
-    fcntl.fcntl(sock, fcntl.F_SETFL, os.O_NONBLOCK)
+    # sock = socket(AF_INET, SOCK_STREAM)
+    # sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    # sock.bind((conf.host, conf.port))
+    # fcntl.fcntl(sock, fcntl.F_SETFL, os.O_NONBLOCK)
+    #
+    # # number of connections in the queue
+    # sock.listen(10)
 
-    # number of connections in the queue
-    sock.listen(10)
+    loop = get_event_loop()
 
     for x in range(0, conf.cpu_count):
         pid = os.fork()
         forks.append(pid)
         if pid == 0:
             loop = get_event_loop()
-            listener = Listener(loop=loop, conf=conf, pid=os.getpid())
+            server = Server(loop=loop, conf=conf, pid=os.getpid())
+            server.start()
             print('PID:', os.getpid())
-            loop.run_until_complete(listener.start(pid=pid, sock=sock, loop=loop))
-            loop.close()
+
+    loop.run_forever()
 
     for pid in forks:
         os.waitpid(pid, 0)

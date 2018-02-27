@@ -8,7 +8,8 @@ from services.response_serializer import ResponseSerializer
 
 class Handler(object):
 
-    def __init__(self, conf: Configure, loop: AbstractEventLoop):
+    def __init__(self, conf: Configure, loop: AbstractEventLoop, pid: int = None):
+        self._pid = pid
         self._conf = conf
         self._parser = RequestParser()
         self._executor = RequestExecutor(conf, loop)
@@ -17,7 +18,9 @@ class Handler(object):
 
         data = b''
         while True:
+            print(f"[Listener] [pid: {self._pid}] try read...")
             chunk = await reader.read(self._conf.read_chunk_size)
+            print(f"[Listener] [pid: {self._pid}] chunk: {chunk}")
             data += chunk
 
             if not chunk or reader.at_eof():
@@ -28,11 +31,18 @@ class Handler(object):
             if lines[-1] == b'':
                 break
 
+        print(f"[Listener] [pid: {self._pid}] data: {data}")
+
         request = self._parser.parse(data.decode())
+        print(f"[Listener] [pid: {self._pid}] completed parse request")
         response = await self._executor.execute(request)
+        print(f"[Listener] [pid: {self._pid}] completed execute request")
+
         data = ResponseSerializer.dump(response)
+        print(f"[Listener] [pid: {self._pid}] completed dump response")
 
         writer.write(data)
         await writer.drain()
+        print(f"[Listener] [pid: {self._pid}] send data: {data}")
 
         writer.close()

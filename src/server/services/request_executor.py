@@ -80,8 +80,6 @@ class RequestExecutor(object):
         else:
             file_url = request.url[1:]
 
-        print(f"file_url: {file_url}")
-
         if len(file_url.split('../')) > 1:
             raise ForbiddenError
 

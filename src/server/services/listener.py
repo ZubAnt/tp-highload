@@ -26,10 +26,10 @@ class Listener(object):
 
             data = b''
             while True:
-                print(f"[Listener] [pid: {self._pid}] try read...")
+                # print(f"[Listener] [pid: {self._pid}] try read...")
                 chunk = await loop.sock_recv(conn, self._conf.read_chunk_size)
                 data += chunk
-                print(f"[Listener] [pid: {self._pid}] chunk: {chunk}")
+                # print(f"[Listener] [pid: {self._pid}] chunk: {chunk}")
 
                 if not chunk:
                     break
@@ -39,16 +39,16 @@ class Listener(object):
                 if lines[-1] == b'':
                     break
 
-            print(f"[Listener] [pid: {self._pid}] data: {data}")
+            # print(f"[Listener] [pid: {self._pid}] data: {data}")
 
             request = self._parser.parse(data.decode())
-            print(f"[Listener] [pid: {self._pid}] completed parse request")
+            # print(f"[Listener] [pid: {self._pid}] completed parse request")
             response = await self._executor.execute(request)
-            print(f"[Listener] [pid: {self._pid}] completed execute request")
+            # print(f"[Listener] [pid: {self._pid}] completed execute request")
             data = ResponseSerializer.dump(response, request.method)
-            print(f"[Listener] [pid: {self._pid}] completed dump response")
+            # print(f"[Listener] [pid: {self._pid}] completed dump response")
             await loop.sock_sendall(conn, data)
-            print(f"[Listener] [pid: {self._pid}] send data: {data}")
+            # print(f"[Listener] [pid: {self._pid}] send data: {data}")
             conn.close()
 
     def stop(self) -> None:
