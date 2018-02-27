@@ -55,12 +55,25 @@ class RequestExecutor(object):
             return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
         except NotFoundError:
             if request.url[-1:] == '/':
-                return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
+                # return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
+                pass
             else:
                 return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
 
+        if request.url[-1:] == '/':
+            file_url = request.url[1:] + 'index.html'
+        else:
+            file_url = request.url[1:]
+
+        filename = os.path.join(self._conf.document_root, file_url)
+
         try:
-            body = await self._reader.read(resource.filename)
+            content_type = ContentTypes[file_url.split('.')[-1]]
+        except KeyError:
+            content_type = ContentTypes.plain
+
+        try:
+            body = await self._reader.read(filename)
         except FileNotFoundError:
             if request.url[-1:] == '/':
                 return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
@@ -71,8 +84,8 @@ class RequestExecutor(object):
 
         return Response(status_code=StatusCodes.OK,
                         protocol=request.protocol,
-                        content_type=resource.content_type.value,
-                        content_length=resource.size,
+                        content_type=content_type.value,
+                        content_length=len(body),
                         body=body)
 
     def _build_resource(self, request: Request) -> Resource:
@@ -81,6 +94,8 @@ class RequestExecutor(object):
             file_url = request.url[1:] + 'index.html'
         else:
             file_url = request.url[1:]
+
+        print(f"file_url: {file_url}")
 
         if len(file_url.split('../')) > 1:
             raise ForbiddenError

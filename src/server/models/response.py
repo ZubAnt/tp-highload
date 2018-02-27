@@ -8,8 +8,8 @@ class Response:
     def __init__(self,
                  status_code: StatusCodes,
                  protocol: str,
-                 content_type: str = None,
-                 content_length: int = 0,
+                 content_type: str = '',
+                 content_length: int = None,
                  body: bytes = b''):
         self._status_code = status_code
         self._protocol = protocol

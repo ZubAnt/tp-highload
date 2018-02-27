@@ -28,8 +28,6 @@ class Handler(object):
             if lines[-1] == b'':
                 break
 
-            await sleep(0)
-
         request = self._parser.parse(data.decode())
         response = await self._executor.execute(request)
         data = ResponseSerializer.dump(response)
