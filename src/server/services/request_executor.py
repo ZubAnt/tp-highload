@@ -42,10 +42,13 @@ class RequestExecutor(object):
             resource = self._build_resource(request)
         except ForbiddenError:
             return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
+        try:
+            content_length = self._build_content_length(resource=resource)
         except NotFoundError:
             return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
+
         return Response(status_code=StatusCodes.OK, protocol=request.protocol,
-                        content_length=resource.size, content_type=resource.content_type.value, body=b'')
+                        content_length=content_length, content_type=resource.content_type.value, body=b'')
 
     async def _execute_get_request(self, request: Request) -> Response:
 
@@ -53,27 +56,9 @@ class RequestExecutor(object):
             resource = self._build_resource(request)
         except ForbiddenError:
             return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
-        except NotFoundError:
-            if request.url[-1:] == '/':
-                # return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
-                pass
-            else:
-                return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
-
-        if request.url[-1:] == '/':
-            file_url = request.url[1:] + 'index.html'
-        else:
-            file_url = request.url[1:]
-
-        filename = os.path.join(self._conf.document_root, file_url)
 
         try:
-            content_type = ContentTypes[file_url.split('.')[-1]]
-        except KeyError:
-            content_type = ContentTypes.plain
-
-        try:
-            body = await self._reader.read(filename)
+            body = await self._reader.read(resource.filename)
         except FileNotFoundError:
             if request.url[-1:] == '/':
                 return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
@@ -84,7 +69,7 @@ class RequestExecutor(object):
 
         return Response(status_code=StatusCodes.OK,
                         protocol=request.protocol,
-                        content_type=content_type.value,
+                        content_type=resource.content_type.value,
                         content_length=len(body),
                         body=body)
 
@@ -103,13 +88,16 @@ class RequestExecutor(object):
         filename = os.path.join(self._conf.document_root, file_url)
 
         try:
-            size = os.path.getsize(filename)
-        except OSError:
-            raise NotFoundError
-
-        try:
             content_type = ContentTypes[file_url.split('.')[-1]]
         except KeyError:
             content_type = ContentTypes.plain
 
-        return Resource(filename=filename, file_url=file_url, content_type=content_type, size=size)
+        return Resource(filename=filename, file_url=file_url, content_type=content_type)
+
+    @classmethod
+    def _build_content_length(cls, resource: Resource) -> int:
+        try:
+            return os.path.getsize(resource.filename)
+        except OSError:
+            raise NotFoundError
+

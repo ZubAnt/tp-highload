@@ -45,10 +45,11 @@ class Listener(object):
             print(f"[Listener] [pid: {self._pid}] completed parse request")
             response = await self._executor.execute(request)
             print(f"[Listener] [pid: {self._pid}] completed execute request")
-            data = ResponseSerializer.dump(response)
+            data = ResponseSerializer.dump(response, request.method)
             print(f"[Listener] [pid: {self._pid}] completed dump response")
             await loop.sock_sendall(conn, data)
             print(f"[Listener] [pid: {self._pid}] send data: {data}")
+            conn.close()
 
     def stop(self) -> None:
         self._is_working = False

@@ -29,14 +29,14 @@ class HttpServer(unittest.TestCase):
   #   s.connect((self.host, self.port))
   #   s.sendall("\n")
   #   s.close()
-  #
+
   # def test_request_without_two_newlines(self):
   #   """ Send GET without to newlines """
   #   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   #   s.connect((self.host, self.port))
   #   s.sendall("GET / HTTP/1.1\n")
   #   s.close()
-  #
+
   # def test_server_header(self):
   #   """Server header exists"""
   #   self.conn.request("GET", "/httptest/")
@@ -81,12 +81,12 @@ class HttpServer(unittest.TestCase):
   #   self.assertEqual(len(data), 20)
   #   self.assertEqual(data, "bingo, you found it\n")
   #
-  def test_file_with_query_string(self):
-    """slash after filename"""
-    self.conn.request("GET", "/httptest/dir2/page.html/")
-    r = self.conn.getresponse()
-    data = r.read()
-    self.assertEqual(int(r.status), 404)
+  # def test_file_with_query_string(self):
+  #   """slash after filename"""
+  #   self.conn.request("GET", "/httptest/dir2/page.html/")
+  #   r = self.conn.getresponse()
+  #   data = r.read()
+  #   self.assertEqual(int(r.status), 404)
   #
   # def test_file_with_query_string(self):
   #   """query string after filename"""
@@ -156,34 +156,34 @@ class HttpServer(unittest.TestCase):
   #   data = r.read()
   #   self.assertIn(int(r.status), (400,405))
   #
-  # def test_head_method(self):
-  #   """head method support"""
-  #
-  #   s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  #   s.connect((self.host, self.port))
-  #   s.send("HEAD /httptest/dir2/page.html HTTP/1.0\r\n\r\n")
-  #   data = ""
-  #   while 1:
-  #     buf = s.recv(1024)
-  #     if not buf: break
-  #     data += buf
-  #   s.close()
-  #
-  #   self.assertTrue(data.find("\r\n\r\n") > 0, "no empty line with CRLF found")
-  #   (head, body) = re.split("\r\n\r\n", data, 1);
-  #   headers = head.split("\r\n")
-  #   self.assertTrue(len(headers) > 0, "no headers found")
-  #   statusline = headers.pop(0)
-  #   (proto, code, status) = statusline.split(" ");
-  #   h = {}
-  #   for k,v in enumerate(headers):
-  #     (name, value) = re.split('\s*:\s*', v, 1)
-  #     h[name] = value
-  #   if (int(code) == 200):
-  #     self.assertEqual(int(h['Content-Length']), 38)
-  #     self.assertEqual(len(body), 0)
-  #   else:
-  #     self.assertIn(int(code), (400,405))
+  def test_head_method(self):
+    """head method support"""
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((self.host, self.port))
+    s.send("HEAD /httptest/dir2/page.html HTTP/1.0\r\n\r\n")
+    data = ""
+    while 1:
+      buf = s.recv(1024)
+      if not buf: break
+      data += buf
+    s.close()
+
+    self.assertTrue(data.find("\r\n\r\n") > 0, "no empty line with CRLF found")
+    (head, body) = re.split("\r\n\r\n", data, 1);
+    headers = head.split("\r\n")
+    self.assertTrue(len(headers) > 0, "no headers found")
+    statusline = headers.pop(0)
+    (proto, code, status) = statusline.split(" ");
+    h = {}
+    for k,v in enumerate(headers):
+      (name, value) = re.split('\s*:\s*', v, 1)
+      h[name] = value
+    if (int(code) == 200):
+      self.assertEqual(int(h['Content-Length']), 38)
+      self.assertEqual(len(body), 0)
+    else:
+      self.assertIn(int(code), (400,405))
   #
   # def test_filetype_html(self):
   #   """Content-Type for .html"""
