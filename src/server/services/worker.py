@@ -46,7 +46,7 @@ class Worker(object):
                 if lines[-1] == b'':
                     break
 
-                # await sleep(0.1)
+                await sleep(0)
 
             logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] request package: {data}")
 
@@ -55,8 +55,8 @@ class Worker(object):
             data = ResponseSerializer.dump(response, request.method)
             await self._loop.sock_sendall(conn, data)
             logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] response package: {data}")
-            # await sleep(0.1)
             conn.close()
+            await sleep(0)
 
     def stop(self) -> None:
         self._is_working = False
