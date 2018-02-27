@@ -9,8 +9,7 @@ import fcntl
 
 from configs.file_configure_factory import FileConfigureFactory
 from configs.src_configure_factory import SrcConfigureFactory
-from server import Server
-from services.listener import Listener
+from services.worker_manager import WorkerManager
 
 forks = []
 
@@ -18,6 +17,8 @@ forks = []
 if __name__ == "__main__":
 
     conf = SrcConfigureFactory.create()
+
+    logging.basicConfig(level=logging.DEBUG)
 
     sock = socket(AF_INET, SOCK_STREAM)
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -27,15 +28,20 @@ if __name__ == "__main__":
     # number of connections in the queue
     sock.listen(10)
 
+    loop = get_event_loop()
+
     for x in range(0, conf.cpu_count):
         pid = os.fork()
         forks.append(pid)
         if pid == 0:
-            loop = get_event_loop()
-            listener = Listener(loop=loop, conf=conf, pid=os.getpid())
-            print('PID:', os.getpid())
-            loop.run_until_complete(listener.start(pid=pid, sock=sock, loop=loop))
-            loop.close()
+
+            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=4, pid=os.getpid())
+            manager.spawn()
+            # loop.close()
+
+    loop.run_forever()
 
     for pid in forks:
         os.waitpid(pid, 0)
+
+

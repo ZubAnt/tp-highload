@@ -8,8 +8,8 @@ class SrcConfigureFactory(object):
         port = 8080
         document_root = "/home/anton/dev/tp/tp-highload/tests/static"
         file_block_size = 1024
-        cpu_count = 4
-        read_chunk_size = 1024
+        cpu_count = 1
+        read_chunk_size = 32
         write_chunk_size = 1024
 
         return Configure(port=port, document_root=document_root, file_block_size=file_block_size,
