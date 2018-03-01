@@ -29,7 +29,9 @@ class Worker(object):
         self._is_working = True
 
         while self._is_working:
+            logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] try accept...")
             conn, addr = await self._loop.sock_accept(self._sock)
+            logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] accepted addr: {addr}")
 
             data = b''
             while True:
@@ -53,8 +55,9 @@ class Worker(object):
             request = self._parser.parse(data.decode())
             response = await self._executor.execute(request)
             data = ResponseSerializer.dump(response, request.method)
+            logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] try sendall response: {data}")
             await self._loop.sock_sendall(conn, data)
-            logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] response package: {data}")
+            logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] completed send")
             conn.close()
             await sleep(0)
 

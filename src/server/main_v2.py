@@ -24,17 +24,16 @@ if __name__ == "__main__":
     sock = socket(AF_INET, SOCK_STREAM)
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     sock.bind((conf.host, conf.port))
-    # fcntl.fcntl(sock, fcntl.F_SETFL, os.O_NONBLOCK)
 
     # number of connections in the queue
-    sock.listen(32)
+    sock.listen(1024)
 
     for x in range(0, conf.cpu_count):
         pid = os.fork()
         forks.append(pid)
         if pid == 0:
             loop = get_event_loop()
-            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=1, pid=os.getpid())
+            manager = WorkerManager(loop=loop, sock=sock, conf=conf, workers=conf.worker, pid=os.getpid())
             manager.spawn()
             loop.close()
 
