@@ -4,7 +4,7 @@ COPY ./requirements.txt ./requirements.txt
 
 RUN pip install -r ./requirements.txt
 
-#COPY ./tests/static/ /var/www/html/
+COPY ./tests/static/ /var/www/html/
 
 COPY ./default.conf /
 
