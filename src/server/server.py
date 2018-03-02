@@ -20,8 +20,7 @@ class Server(object):
                                             port=self._conf.port,
                                             loop=self._loop))
 
-    async def start_server(self, idx: int = None) -> None:
-        self._handler = Handler(self._conf, self._loop, idx=idx)
+    async def start_server_async(self) -> None:
         await start_server(client_connected_cb=self._handler.handle,
                            host=self._conf.host,
                            port=self._conf.port,

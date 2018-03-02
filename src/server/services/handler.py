@@ -20,9 +20,9 @@ class Handler(object):
 
         data = b''
         while True:
-            logging.debug(f"[Handler] try read...")
+            logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] try read chunk...")
             chunk = await reader.read(self._conf.read_chunk_size)
-            logging.debug(f"[Handler] chunk: {chunk}")
+            logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end read chunk")
             data += chunk
 
             if not chunk or reader.at_eof():
@@ -33,11 +33,17 @@ class Handler(object):
             if lines[-1] == b'':
                 break
 
-        logging.debug(f"[Handler] data: {data}")
-
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end read data")
         request = self._parser.parse(data.decode())
+
         response = await self._executor.execute(request)
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end execute request")
+
         data = ResponseSerializer.dump(response)
         writer.write(data)
+
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] try drain writer...")
         await writer.drain()
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end drain writer")
+
         writer.close()
