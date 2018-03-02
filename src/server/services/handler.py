@@ -33,8 +33,6 @@ class Handler(object):
             if lines[-1] == b'':
                 break
 
-            await sleep(0)
-
         logging.debug(f"[Handler] data: {data}")
 
         request = self._parser.parse(data.decode())
@@ -50,4 +48,3 @@ class Handler(object):
         logging.debug(f"[Handler] send data: {data}")
 
         writer.close()
-        await sleep(0)
