@@ -14,9 +14,9 @@ class ExternalConfigParser(object):
                     key: value
                 })
 
-        listen = 80 if data.get('listen') is None else data['listen']
-        cpu_limit = 1 if data.get('cpu_limit') is None else data['cpu_limit']
-        thread_limit = 8 if data.get('thread_limit') is None else data['thread_limit']
+        listen = 80 if data.get('listen') is None else int(data['listen'])
+        cpu_limit = 1 if data.get('cpu_limit') is None else int(data['cpu_limit'])
+        thread_limit = 8 if data.get('thread_limit') is None else int(data['thread_limit'])
         document_root = "/var/www/html" if data.get('document_root') is None else data['document_root']
 
         return ExternalConfigure(listen=listen, cpu_limit=cpu_limit,
