@@ -7,6 +7,7 @@ class ExternalConfigParser(object):
         data = {}
         with open(filename) as file:
             for line in file:
+                line = line.strip()
                 if not line:
                     continue
                 pair = line.split()
