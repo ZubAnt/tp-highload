@@ -13,7 +13,7 @@ class ExternalConfigConverter(object):
         cpu_count = ext_conf.cpu_limit
         read_chunk_size = 1024
         write_chunk_size = 1024
-        workers = 8
+        workers = 1024
 
         return Configure(port=port, document_root=document_root, file_block_size=file_block_size, workers=workers,
                          cpu_count=cpu_count, read_chunk_size=read_chunk_size, write_chunk_size=write_chunk_size)
