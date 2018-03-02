@@ -60,7 +60,7 @@ class RequestExecutor(object):
         try:
             body = await self._reader.read(resource.filename)
         except FileNotFoundError:
-            if request.url[-1:] == '/':
+            if request.path[-1:] == '/':
                 return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
             else:
                 return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
@@ -75,10 +75,10 @@ class RequestExecutor(object):
 
     def _build_resource(self, request: Request) -> Resource:
         # get last el or empty string
-        if request.url[-1:] == '/':
-            file_url = request.url[1:] + 'index.html'
+        if request.path[-1:] == '/':
+            file_url = request.path[1:] + 'index.html'
         else:
-            file_url = request.url[1:]
+            file_url = request.path[1:]
 
         if len(file_url.split('../')) > 1:
             raise ForbiddenError

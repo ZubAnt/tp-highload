@@ -36,15 +36,8 @@ class Handler(object):
         logging.debug(f"[Handler] data: {data}")
 
         request = self._parser.parse(data.decode())
-        logging.debug(f"[Handler] completed parse request")
         response = await self._executor.execute(request)
-        logging.debug(f"[Handler] completed execute request")
-
         data = ResponseSerializer.dump(response)
-        logging.debug(f"[Handler] completed dump response")
-
         writer.write(data)
         await writer.drain()
-        logging.debug(f"[Handler] send data: {data}")
-
         writer.close()
