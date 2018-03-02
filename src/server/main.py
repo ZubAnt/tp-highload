@@ -17,13 +17,11 @@ if __name__ == "__main__":
 
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
-    # conf = FileConfigureFactory.create()
-    conf = SrcConfigureFactory.create()
+    conf = FileConfigureFactory.create()
 
-    # logging.basicConfig(level=logging.DEBUG)
     logging.basicConfig(level=logging.INFO)
 
-    for x in range(0, conf.cpu_count):
+    for _ in range(0, conf.cpu_count):
         pid = os.fork()
         forks.append(pid)
 
