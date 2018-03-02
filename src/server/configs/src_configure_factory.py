@@ -11,7 +11,7 @@ class SrcConfigureFactory(object):
         cpu_count = 4
         read_chunk_size = 1024
         write_chunk_size = 1024
-        workers = 8
+        workers = 10
 
         return Configure(port=port, document_root=document_root, file_block_size=file_block_size, workers=workers,
                          cpu_count=cpu_count, read_chunk_size=read_chunk_size, write_chunk_size=write_chunk_size)

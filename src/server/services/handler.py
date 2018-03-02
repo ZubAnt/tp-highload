@@ -20,9 +20,9 @@ class Handler(object):
 
         data = b''
         while True:
-            logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] try read...")
+            logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] [{reader._transport}] try read...")
             chunk = await reader.read(self._conf.read_chunk_size)
-            logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] chunk: {chunk}")
+            logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] [{reader._transport}] chunk: {chunk}")
             data += chunk
 
             if not chunk or reader.at_eof():

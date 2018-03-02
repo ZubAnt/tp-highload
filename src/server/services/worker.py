@@ -58,6 +58,7 @@ class Worker(object):
             logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] try sendall response: {data}")
             await self._loop.sock_sendall(conn, data)
             logging.debug(f"[Worker[{idx}]] [pid: {self._pid}] completed send")
+            conn.shutdown(socket.SHUT_RDWR)
             conn.close()
             await sleep(0)
 

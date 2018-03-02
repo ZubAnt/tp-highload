@@ -45,11 +45,9 @@ class WorkerManager(object):
 
         #############################################################################
 
-        tasks: List[Task] = list()
         for idx in range(self._workers):
             logging.debug(f"[WorkerManager] spawning {idx} worker...")
-            task = self._loop.create_task(self._worker.start(idx))
-            tasks += [task]
+            self._loop.create_task(self._worker.start(idx))
 
         self._loop.run_forever()
 

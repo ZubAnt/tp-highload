@@ -1,5 +1,7 @@
+import asyncio
 import logging
 
+import uvloop
 from asyncio import get_event_loop
 
 from configs.file_configure_factory import FileConfigureFactory
@@ -14,6 +16,7 @@ def main():
 
     conf = SrcConfigureFactory.create()
 
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = get_event_loop()
     manager = ServerManager(loop, conf, workers=10)
     manager.spawn()
