@@ -17,4 +17,4 @@ EXPOSE 8080
 
 USER root
 
-CMD ["python3.6", "./server/main_v2.py"]
+CMD ["python3.6", "./server/main_v4.py"]
