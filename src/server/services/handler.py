@@ -20,9 +20,9 @@ class Handler(object):
 
         data = b''
         while True:
-            logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] [{reader._transport}] try read...")
+            logging.debug(f"[Handler] try read...")
             chunk = await reader.read(self._conf.read_chunk_size)
-            logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] [{reader._transport}] chunk: {chunk}")
+            logging.debug(f"[Handler] chunk: {chunk}")
             data += chunk
 
             if not chunk or reader.at_eof():
@@ -35,19 +35,19 @@ class Handler(object):
 
             await sleep(0)
 
-        logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] data: {data}")
+        logging.debug(f"[Handler] data: {data}")
 
         request = self._parser.parse(data.decode())
-        logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] completed parse request")
+        logging.debug(f"[Handler] completed parse request")
         response = await self._executor.execute(request)
-        logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] completed execute request")
+        logging.debug(f"[Handler] completed execute request")
 
         data = ResponseSerializer.dump(response)
-        logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] completed dump response")
+        logging.debug(f"[Handler] completed dump response")
 
         writer.write(data)
         await writer.drain()
-        logging.debug(f"[Handler[{self._idx}] [pid: {self._pid}] send data: {data}")
+        logging.debug(f"[Handler] send data: {data}")
 
         writer.close()
         await sleep(0)
