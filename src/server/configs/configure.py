@@ -13,7 +13,6 @@ class Configure(object):
         self._file_block_size = file_block_size
         self._cpu_count = cpu_count
         self._read_chunk_size = read_chunk_size
-        self._worker = 1
         self._write_chunk_size = write_chunk_size
         self._workers = 1 if workers is None else workers
 
@@ -32,10 +31,6 @@ class Configure(object):
     @property
     def file_block_size(self) -> int:
         return self._file_block_size
-
-    @property
-    def worker(self) -> int:
-        return self._worker
 
     @property
     def cpu_count(self) -> int:
