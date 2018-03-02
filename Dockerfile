@@ -1,5 +1,9 @@
 FROM python:slim
 
+COPY ./requirements.txt ./requirements.txt
+
+RUN pip install -r ./requirements.txt
+
 COPY ./tests/static/ /var/www/html/
 
 COPY ./default.conf /
@@ -13,4 +17,4 @@ EXPOSE 8080
 
 USER root
 
-CMD python3.6 ./server/main_v2.py
+CMD ["python3.6", "./server/main.py"]

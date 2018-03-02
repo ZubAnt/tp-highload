@@ -18,11 +18,11 @@ class Server(object):
         self._loop.create_task(start_server(client_connected_cb=self._handler.handle,
                                             host=self._conf.host,
                                             port=self._conf.port,
-                                            loop=self._loop,
-                                            reuse_port=True))
+                                            loop=self._loop))
 
-    async def start_server(self) -> None:
+    async def start_server_async(self) -> None:
         await start_server(client_connected_cb=self._handler.handle,
                            host=self._conf.host,
                            port=self._conf.port,
-                           loop=self._loop)
+                           loop=self._loop,
+                           reuse_port=True)

@@ -1,3 +1,4 @@
+import logging
 from asyncio import StreamReader, StreamWriter, sleep, AbstractEventLoop
 
 from configs.configure import Configure
@@ -8,7 +9,8 @@ from services.response_serializer import ResponseSerializer
 
 class Handler(object):
 
-    def __init__(self, conf: Configure, loop: AbstractEventLoop, pid: int = None):
+    def __init__(self, conf: Configure, loop: AbstractEventLoop, pid: int = None, idx: int = None):
+        self._idx = idx
         self._pid = pid
         self._conf = conf
         self._parser = RequestParser()
@@ -18,9 +20,9 @@ class Handler(object):
 
         data = b''
         while True:
-            print(f"[Listener] [pid: {self._pid}] try read...")
+            logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] try read chunk...")
             chunk = await reader.read(self._conf.read_chunk_size)
-            print(f"[Listener] [pid: {self._pid}] chunk: {chunk}")
+            logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end read chunk")
             data += chunk
 
             if not chunk or reader.at_eof():
@@ -31,18 +33,17 @@ class Handler(object):
             if lines[-1] == b'':
                 break
 
-        print(f"[Listener] [pid: {self._pid}] data: {data}")
-
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end read data")
         request = self._parser.parse(data.decode())
-        print(f"[Listener] [pid: {self._pid}] completed parse request")
+
         response = await self._executor.execute(request)
-        print(f"[Listener] [pid: {self._pid}] completed execute request")
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end execute request")
 
         data = ResponseSerializer.dump(response)
-        print(f"[Listener] [pid: {self._pid}] completed dump response")
-
         writer.write(data)
+
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] try drain writer...")
         await writer.drain()
-        print(f"[Listener] [pid: {self._pid}] send data: {data}")
+        logging.debug(f"[Handler] [pid: {self._pid}] [idx: {self._idx}] end drain writer")
 
         writer.close()

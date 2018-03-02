@@ -60,7 +60,7 @@ class RequestExecutor(object):
         try:
             body = await self._reader.read(resource.filename)
         except FileNotFoundError:
-            if request.url[-1:] == '/':
+            if request.path[-1:] == '/':
                 return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
             else:
                 return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
@@ -74,23 +74,16 @@ class RequestExecutor(object):
                         body=body)
 
     def _build_resource(self, request: Request) -> Resource:
-        # get last el or empty string
-        if request.url[-1:] == '/':
-            file_url = request.url[1:] + 'index.html'
-        else:
-            file_url = request.url[1:]
 
-        if len(file_url.split('../')) > 1:
+        file_path = self._build_file_path(request.path)
+
+        if len(file_path.split('../')) > 1:
             raise ForbiddenError
 
-        filename = os.path.join(self._conf.document_root, file_url)
+        filename = os.path.join(self._conf.document_root, file_path)
+        content_type = self._build_content_type(file_path=file_path)
 
-        try:
-            content_type = ContentTypes[file_url.split('.')[-1]]
-        except KeyError:
-            content_type = ContentTypes.plain
-
-        return Resource(filename=filename, file_url=file_url, content_type=content_type)
+        return Resource(filename=filename, file_path=file_path, content_type=content_type)
 
     @classmethod
     def _build_content_length(cls, resource: Resource) -> int:
@@ -98,4 +91,19 @@ class RequestExecutor(object):
             return os.path.getsize(resource.filename)
         except OSError:
             raise NotFoundError
+
+    @classmethod
+    def _build_file_path(cls, path: str) -> str:
+        # get last el or empty string
+        if path[-1:] == '/':
+            return path[1:] + 'index.html'
+        else:
+            return path[1:]
+
+    @classmethod
+    def _build_content_type(cls, file_path) -> ContentTypes:
+        try:
+            return ContentTypes[file_path.split('.')[-1]]
+        except KeyError:
+            return ContentTypes.plain
 
