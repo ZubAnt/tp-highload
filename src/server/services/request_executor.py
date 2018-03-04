@@ -57,6 +57,12 @@ class RequestExecutor(object):
         except ForbiddenError:
             return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
 
+        if not os.path.exists(resource.filename):
+            if request.path[-1:] == '/':
+                return Response(status_code=StatusCodes.FORBIDDEN, protocol=request.protocol)
+            else:
+                return Response(status_code=StatusCodes.NOT_FOUND, protocol=request.protocol)
+
         try:
             body = await self._reader.read(resource.filename)
         except FileNotFoundError:
