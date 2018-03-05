@@ -1,17 +1,19 @@
 from configs.configure import Configure
+from configs.external.external_configure import ExternalConfigure
 
 
-class SrcConfigureFactory(object):
+class ExternalConfigConverter(object):
 
     @staticmethod
-    def create() -> Configure:
-        port = 8080
-        document_root = "/home/anton/dev/tp/tp-highload/tests/static"
+    def convert(ext_conf: ExternalConfigure) -> Configure:
+
+        port = ext_conf.listen
+        document_root = ext_conf.document_root
         file_block_size = 1024
-        cpu_count = 4
+        cpu_count = ext_conf.cpu_limit
         read_chunk_size = 1024
         write_chunk_size = 1024
-        workers = 10
+        workers = 1024
 
         return Configure(port=port, document_root=document_root, file_block_size=file_block_size, workers=workers,
                          cpu_count=cpu_count, read_chunk_size=read_chunk_size, write_chunk_size=write_chunk_size)

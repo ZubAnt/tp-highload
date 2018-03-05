@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from models.status_codes import StatusCodes
 
@@ -8,15 +9,16 @@ class Response:
     def __init__(self,
                  status_code: StatusCodes,
                  protocol: str,
-                 content_type: str = None,
-                 content_length: int = 0,
-                 body: bytes = b''):
+                 content_type: str = '',
+                 content_length: int = None,
+                 body: bytes = b'',
+                 date: datetime = None):
         self._status_code = status_code
         self._protocol = protocol
         self._content_type = content_type
         self._content_length = content_length
         self._body = body
-        self._date = datetime.utcnow()
+        self._date = date
 
     @property
     def status_code(self) -> StatusCodes:
@@ -39,5 +41,5 @@ class Response:
         return self._content_length
 
     @property
-    def date(self) -> datetime:
+    def date(self) -> Optional[datetime]:
         return self._date
